@@ -1,14 +1,20 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 #define const_height 4
 #define const_length 6
 #define length_scanf_str 3
+typedef struct{
+	char name_players1[16];
+	char name_players2[16];
+} name;
 int status_game = 0;
 int check_data(char ch[][const_length]);
 int check_win(char ch[][const_length]);
 void start_game();
 void past(char*a, char ch[][const_length], int number);
 int check_correct_data(char* a, char ch[][const_length]);
+void enter_names(name *new_game);
 
 char space = ' ';
 int main() 
@@ -19,6 +25,8 @@ int main()
 
 void start_game()
 {
+	name *new_game = malloc(sizeof(name));
+	enter_names(new_game);
 	status_game = 1;
 	int i, j;
 	int number_move=0;
@@ -29,11 +37,12 @@ void start_game()
     };
 	while (!check_win(ch))
 	{
+		printf("the move of the %d player\n", (number_move % 2) + 1);
 		char a[length_scanf_str];
 		scanf("%s", a);
 		while(!check_correct_data(a, ch))
 			scanf("%s", a);
-		past(a, ch, number_move);				// Фунуция выполняющая ход игрока
+		past(a, ch, number_move);
 		for (i = 0; i < const_height - 1; ++i)
 		{
 			for (j = 0; j < const_length - 1; ++j)
@@ -42,37 +51,41 @@ void start_game()
 		}
 		number_move++;
 	}
-	printf("Win player %d\n", ((number_move - 1) % 2) + 1);
+	
+	printf("Win player %d ", ((number_move - 1) % 2) + 1);
+	if(((number_move - 1) % 2) + 1 == 1)
+		printf("%s\n", new_game->name_players1);
+	else
+		printf("%s\n", new_game->name_players2);
+}
+
+void enter_names(name *new_game)
+{
+	printf("Enter name for players 1\n");
+	scanf("%s", new_game->name_players1);
+	printf("Enter name for players 2\n");
+	scanf("%s", new_game->name_players2);
 }
 
 void past(char*a, char ch[][const_length], int number)
 {
-/* 	if((a[1]-'0')%2!=0)
-		ch[a[0]-'1'][a[1]-'0'-1] = 'x';
-	else if((a[1]-'0')%2==0)
-		ch[a[0]-'1'][a[1]-'0'] = 'x';
- */
-	/*if((a[1]-'0')%2==0)
-		a[1]=+1;
-	ch[a[0]-'1'][a[1]-'0'-1] = 'x';**/
-	//printf("%d - %d \n", a[0]-'0', a[1]-'0');
 	if ( number % 2 == 0)
-	{		
-		if(a[1]-'0'==1)
-			ch[a[0]-'1'][a[1] - '1'] = 'x';
-		else if ((a[1]-'0')%2==0)
-			ch[a[0]-'1'][a[1] - '1' +1 ] = 'x';
-		else if ((a[1]-'0')%2!=0)
-			ch[a[0]-'1'][a[1] - '1' + 2] = 'x';
+	{
+		if(a[1] - '1' == 0)
+			ch[a[0] - '1'][a[1] - '1'] = 'x';
+		else if(a[1] - '1' == 1)
+			ch[a[0] - '1'][a[1] - '1' + 1] = 'x';
+		else if(a[1] - '1' == 2)
+			ch[a[0] - '1'][a[1] - '1' + 2] = 'x';
 	}
 	else
 	{
-		if(a[1]-'0'==1)
+		if(a[1] - '0' == 1)
 			ch[a[0] - '1'][a[1] - '1'] = 'o';
-		else if ((a[1]-'0')%2==0)
-			ch[a[0]-'1'][a[1]-'1' + 1] = 'o';
-		else if ((a[1]-'0')%2!=0)
-			ch[a[0]-'1'][a[1]-'0'+1] = 'o';
+		else if(a[1] - '0' == 2)
+			ch[a[0] - '1'][a[1] - '1' + 1] = 'o';
+		else if(a[1] - '0' == 3)
+			ch[a[0] - '1'][a[1] - '1' + 2] = 'o';		
 	}
  }
  
@@ -80,13 +93,11 @@ int check_correct_data(char* a, char ch[][const_length])
  {
 	if( (a[0]>= '1' && a[0] <= '3') && (a[1]>= '1' && a[1] <= '3' ) )
 	{
-		if(a[1] - '1' == 0 && ch[a[0]-'1'][a[1] - '1'] == space)
+		if(a[1] - '1' == 0 && ch[a[0]-'1'][a[1]-'1'] == space)
 			return 1;
-		else if ( (a[1] - '0') % 2 == 0 &&
-			ch[a[0] - '1'][a[1] - '1' + 1 ] == space) 
+		else if(a[1] - '1' == 1 && ch[a[0]-'1'][a[1]-'1' + 1] == space)
 			return 1;
-		else if ( (a[1] - '0') % 2 != 0 && 
-			ch[a[0]-'1'][a[1] - '1' + 2] == space)
+		else if(a[1] - '1' == 2 && ch[a[0]-'1'][a[1]-'1' + 2] == space)
 			return 1;
 		printf("The cage is not empty, Enter data again\n");
 		return 0;
