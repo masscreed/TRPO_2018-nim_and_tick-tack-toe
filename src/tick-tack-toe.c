@@ -8,13 +8,7 @@ int status_game = 0;
 int end_game = 1;
 char space = ' ';
 
-int main() 
-{
-	start_game();
-    return 0;
-}
-
-void start_game()
+void start_game_tick()
 {
 	name *names_players = malloc(sizeof(name));
 	score *set_score = malloc(sizeof(score));
@@ -29,55 +23,65 @@ void start_game()
 		" | | ",
 		" | | "
 		};
-		while (check_win(ch) == 0)
+		while (check_win(ch) == 0 && status_game)
 		{
 			printf("the move of the %d player\n", (number_move % 2) + 1);
 			char a[length_scanf_str];
 			do
 			{
-				enter_coordinate(a);
+				if (enter_coordinate(a) == -1)
+					it_end(names_players, set_score, 1);
 			}
-			while(!check_correct_data(a, ch));
-			past(a, ch, number_move);
-			print_board(ch);
-			number_move++;
-		}
-		if (check_win(ch) == 2)
-			printf("Dead heat\n");
-		else
-		{
-			printf("\nWin player %d\n", ((number_move - 1) % 2) + 1);
-			if(((number_move - 1) % 2) + 1 == 1)
+			while(!check_correct_data(a, ch) && status_game);
+			if(status_game)
 			{
-				set_score->win_players1++;
-				set_score->loss_players2++;
-				printf("Name: %s\t", names_players->name_players1);
-				printf("Count win: %d, loss: %d\n\n", set_score->win_players1, set_score->loss_players1);
-			}
-			else
-			{	
-				set_score->win_players2++;
-				set_score->loss_players1++;
-				printf("Name: %s\t", names_players->name_players2);
-				printf("Count win: %d, loss: %d\n\n", set_score->win_players2, set_score->loss_players2);
+				past(a, ch, number_move);
+				print_board(ch);
+				number_move++;
 			}
 		}
-		printf("Enter n if you do not want to continue playing, else press any key\n");
-		it_end();
+		if(status_game)
+		{
+			if (check_win(ch) == 2)
+				printf("Dead heat\n");
+			else
+			{
+				printf("\nWin player %d\n", ((number_move - 1) % 2) + 1);
+				if(((number_move - 1) % 2) + 1 == 1)
+				{
+					set_score->win_players1++;
+					set_score->loss_players2++;
+					printf("Name: %s\t", names_players->name_players1);
+					printf("Count win: %d, loss: %d\n\n", set_score->win_players1, set_score->loss_players1);
+				}
+				else
+				{	
+					set_score->win_players2++;
+					set_score->loss_players1++;
+					printf("Name: %s\t", names_players->name_players2);
+					printf("Count win: %d, loss: %d\n\n", set_score->win_players2, set_score->loss_players2);
+				}
+			}
+			printf("Enter n if you do not want to continue playing, else press any key\n");
+			it_end(names_players, set_score, 0);
+		}
 	}
 }
 
-void enter_coordinate(char a[])
+int enter_coordinate(char a[])
 {
 	int i;
 	for(i = 0; i < 3 - 1; i++)
 	{
 		a[i] = getche();
+		if(a[i] == 'q')
+			return -1;
 		a[i + 1] = '\0';
 		if(a[i] == '\n')
 			i++;
 	}
 	printf("\n");
+	return 0;
 }
 
 void print_board(char ch[][const_length])
@@ -91,25 +95,44 @@ void print_board(char ch[][const_length])
 	}
 }
 
-void it_end()
+void it_end(name *names_players, score *score, int status)
 {
-	char end;
-	end = getche();
-	if( end == 'n')
+	if( status == 0)
 	{
-		printf("\nEnd game\n\n");
-		status_game = 0;
-		end_game = 1;	
+		char end;
+		end = getche();
+		if( end == 'n')
+		{
+			system("clear");
+			status_game = 0;
+			end_game = 1;	
+			safe_score(names_players, score);
+		}
+		else
+			printf("\nRestart game\n\n");
 	}
-	else
-		printf("\nRestart game\n\n");
+	else if(status == 1)
+	{
+		char end;
+		printf("\nAre you sure you want to finish the game?\n");
+		printf("If you sure press y, else press any key\n");
+		end = getche();
+		if( end == 'y')
+		{
+			system("clear");
+			status_game = 0;
+			end_game = 1;
+			safe_score(names_players, score);
+		}
+		
+	}
 }
 
 void enter_names(name *names_players, score *set_score)
 {
 	printf("Enter name for players 1\n");
 	int i, k=0;
-	for(i = 0; (i < 16 - 1) && k == 0; i++)
+	for(i = 0; (i < length_name - 1) && k == 0; i++)
 	{
 		names_players->name_players1[i] = getchar();
 		if(names_players->name_players1[i] == '\n')
@@ -120,12 +143,12 @@ void enter_names(name *names_players, score *set_score)
 		names_players->name_players1[i + 1] = '\0';
 	}
 	printf("Name: %s\n", names_players->name_players1);
-	if( i >= 15)
+	if( i >= length_name - 1)
 		while(getchar() != '\n');
 
 	printf("Enter name for players 2\n");
 	k=0;
-	for(i = 0; (i < 16 - 1) && k == 0; i++)
+	for(i = 0; (i < length_name - 1) && k == 0; i++)
 	{
 		names_players->name_players2[i] = getchar();
 		if(names_players->name_players2[i] == '\n')
@@ -133,7 +156,7 @@ void enter_names(name *names_players, score *set_score)
 		names_players->name_players2[i + 1] = '\0';
 	}
 	printf("Name: %s\n", names_players->name_players2);
-	if( i >= 15)
+	if( i >= length_name - 1)
 		while(getchar() != '\n');
 
 	set_score->win_players1 = 0;
@@ -177,9 +200,27 @@ int check_correct_data(char* a, char ch[][const_length])
 		printf("The cage is not empty, Enter data again\n");
 		return 0;
 	}
-	printf("Error, Enter correct data\n");
+	printf("\nError, Enter correct data\n");
 	return 0;
  }
+ 
+ void safe_score(name *names_players, score *score)
+{
+	FILE *safe_score;
+	if( (safe_score = fopen("score_tick.txt", "wt")) != NULL)
+	{
+		if(score->win_players1 != 0 || score->loss_players1 != 0)
+		{
+			fprintf(safe_score, "%d %d %s", score->win_players1, score->loss_players1, names_players->name_players1);
+		}
+		
+		if(score->win_players2 != 0 || score->loss_players2 != 0)
+		{
+			fprintf(safe_score, "%d %d %s", score->win_players2, score->loss_players2, names_players->name_players2);
+		}
+		fclose(safe_score);
+	}
+}
  
 int check_win(char ch[][const_length])
 {

@@ -16,13 +16,16 @@ typedef struct{
 #define const_height 4
 #define const_length 6
 #define length_scanf_str 3
+#define length_name 16
 
+void print_top_tick();
 int check_win(char ch[][const_length]);
-void start_game();
+void start_game_tick();
 void past(char*a, char ch[][const_length], int number);
 int check_correct_data(char* a, char ch[][const_length]);
 void enter_names(name *names_players, score *set_score);
-void it_end();
+void it_end(name *names_players, score *score, int status);
 void print_board(char ch[][const_length]);
-void enter_coordinate(char a[]);
+int enter_coordinate(char a[]);
+void safe_score(name *names_players, score *score);
 #endif
