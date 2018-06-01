@@ -1,29 +1,60 @@
 #include<stdio.h>
 
 void mass_input(int mass[3]) { //считывает количество спичек в каждой кучке
-	printf("\nEnter the number of matches in the first pile\n");
-	scanf("%d", &mass[0]);
+	char str[256];
+	int n = 0;
 	
-	printf("\nEnter the number of matches in the second pile\n");
-	scanf("%d", &mass[1]);
-	
-	printf("\nEnter the number of matches in the third pile\n");
-	scanf("%d", &mass[2]);
-	
+	while (n == 0) {
+		printf("\nEnter the number of matches in the first pile\n");
+		gets(str);
+		if ( isdigit(str[0]) ) {
+			mass[0] = atoi (str);
+			n++;
+		} else {
+			printf("ERROR");
+		}
+		if (mass[0] <= 0) {
+			n--;
+		}
+	}
+	n--;
+	while (n == 0) {
+		printf("\nEnter the number of matches in the second pile\n");
+		gets(str);
+		if ( isdigit(str[0]) ) {
+			mass[1] = atoi (str);
+			n++;
+		} else {
+			printf("ERROR");
+		}
+	}
+	n--;
+	while (n == 0) {
+		printf("\nEnter the number of matches in the third pile\n");
+		gets(str);
+		if ( isdigit(str[0]) ) {
+			mass[2] = atoi (str);
+			n++;
+		} else {
+			printf("ERROR");
+		}
+	}
+	n--;
 	return ;
 }
 
 void mass_output(int mass[3]) { //выводит массив из количества спичек в каждой кучке
+	system ("clear");
 	printf("\n");
 
 	for(int i=1; i<4; i++) {
-	  printf("%d\t", i);
+		printf("%d\t", i);
 	}
 
 	printf("\n");
 
 	for(int i=0; i<3; i++) {
-	  printf("%d\t", mass[i]);
+		printf("%d\t", mass[i]);
 	}
 
 	printf("\n");
@@ -33,42 +64,70 @@ void mass_output(int mass[3]) { //выводит массив из количе�
 
 int heap_selection() { //считывает выбранную кучку
 	int input;
-	printf("\nSelect a pile\n");
-	scanf("%d", &input);
+	char str[256];
+	int n = 0;
+	
+	while (n == 0) {
+		printf("\nSelect a pile\n");
+		gets(str);
+		if ( isdigit(str[0]) ) {
+			input = atoi (str);
+			n++;
+		} else {
+			printf("ERROR");
+		}
+	}
+	
 	return input;
 }
 
 int heap_check(int input, int mass[3], int f) { //проверяет корректно ли введена кучка
 	if ( input >= 1 && input <= 3 ) {
-		if ( mass[input-1] > 0 )
+		if ( mass[input-1] > 0 ) {
 			f--;
-		else
+		} else {
 			printf("\nERROR\n");
-	} else 
+		}
+	} else { 
 		printf("\nERROR\n");
+	}
+	
 	return f;
 }
 
 int take_number_matches() { //считывает сколько спичек взять из кучки
-	int n;
-	printf("\nHow many matches to take?\n");
-	scanf("%d", &n);
-	return n;
+	int num, k = 0;
+	char str[256];
+	
+	while (k == 0) {
+		printf("\nHow many matches to take?\n");
+		gets(str);
+		if ( isdigit(str[0]) ) {
+			num = atoi (str);
+			k++;
+		} else {
+			printf("ERROR");
+		}
+	}
+	
+	return num;
 }
 
-int* heap_change(int* mass, int i, int n) { //подсчет кучки после take_number_matches
-	mass[i] = mass[i] - n;
+int* heap_change(int* mass, int i, int num) { //подсчет кучки после take_number_matches
+	mass[i] = mass[i] - num;
+	
 	return mass[i];
 }
 
 void mechanics_of_the_game (int mass[3]) { //механика игры
-	int n, input; //n - количество взятых спичек, input - выбранная кучка
+	int num, input; //num - количество взятых спичек, input - выбранная кучка
 	int k = 1, f, i; //k - проверка на очередь игрока, f - проверка на правельность введеного значения
 	
 	while ( mass[0] > 0 || mass[1] > 0 || mass[2] > 0) {
 		if ( k == 1) {
 			printf("\nPlayer # 1 is walking\n");
 			f = 1;
+			
 			while ( f == 1 ) {
 				input = heap_selection();
 				f = heap_check(input, mass, f);
@@ -79,11 +138,11 @@ void mechanics_of_the_game (int mass[3]) { //механика игры
 					f = 1;
 					while ( f == 1 ) {
 						
-						n = take_number_matches();
+						num = take_number_matches();
 						
-						if (n <= mass[0]) {
+						if (num <= mass[0]) {
 							i = 0;
-							mass[0] = heap_change(mass, i, n);
+							mass[0] = heap_change(mass, i, num);
 							mass_output(mass);
 							f--;
 						} else {
@@ -96,11 +155,11 @@ void mechanics_of_the_game (int mass[3]) { //механика игры
 					f = 1;
 					while ( f == 1 ) {
 						
-						n = take_number_matches();
+						num = take_number_matches();
 						
-						if (n <= mass[1]) {
+						if (num <= mass[1]) {
 							i = 1;
-							mass[1] = heap_change(mass, i, n);
+							mass[1] = heap_change(mass, i, num);
 							mass_output(mass);
 							f--;
 						} else {
@@ -113,11 +172,11 @@ void mechanics_of_the_game (int mass[3]) { //механика игры
 					f = 1;
 					while ( f == 1 ) {
 						
-						n = take_number_matches();
+						num = take_number_matches();
 						
-						if (n <= mass[2]) {
+						if (num <= mass[2]) {
 							i = 2;
-							mass[2] = heap_change(mass, i, n);
+							mass[2] = heap_change(mass, i, num);
 							mass_output(mass);
 							f--;
 						} else {
@@ -141,11 +200,11 @@ void mechanics_of_the_game (int mass[3]) { //механика игры
 					f = 1;
 					while ( f == 1 ) {
 						
-						n = take_number_matches();
+						num = take_number_matches();
 						
-						if (n <= mass[0]) {
+						if (num <= mass[0]) {
 							i = 0;
-							mass[0] = heap_change(mass, i, n);
+							mass[0] = heap_change(mass, i, num);
 							mass_output(mass);
 							f--;
 						} else {
@@ -158,11 +217,11 @@ void mechanics_of_the_game (int mass[3]) { //механика игры
 					f = 1;
 					while ( f == 1 ) {
 						
-						n = take_number_matches();
+						num = take_number_matches();
 						
-						if (n <= mass[1]) {
+						if (num <= mass[1]) {
 							i = 1;
-							mass[1] = heap_change(mass, i, n);
+							mass[1] = heap_change(mass, i, num);
 							mass_output(mass);
 							f--;
 						} else {
@@ -175,11 +234,11 @@ void mechanics_of_the_game (int mass[3]) { //механика игры
 					f = 1;
 					while ( f == 1 ) {
 						
-						n = take_number_matches();
+						num = take_number_matches();
 						
-						if (n <= mass[2]) {
+						if (num <= mass[2]) {
 							i = 2;
-							mass[2] = heap_change(mass, i, n);
+							mass[2] = heap_change(mass, i, num);
 							mass_output(mass);
 							f--;
 						} else {
@@ -203,6 +262,6 @@ int main () {
 	
 	mechanics_of_the_game(mass);
 	
-	printf("\nYOU WON\n");
+	printf("\nYOU WIN\n");
 	return 0;
 }
