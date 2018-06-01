@@ -134,14 +134,18 @@ void enter_names(name *names_players, score *set_score)
 	for(i = 0; (i < length_name - 1) && k == 0; i++)
 	{
 		names_players->name_players1[i] = getchar();
+		names_players->name_players1[i + 1] = '\0';
 		if(names_players->name_players1[i] == '\n')
 		{
-			k = 1;
-			printf("\n");
+			if(names_players->name_players1[0] != '\n' && names_players->name_players1[0] != '\0')
+			{
+				k = 1;
+				printf("\n");
+			}
+			else
+				i--;
 		}
-		names_players->name_players1[i + 1] = '\0';
 	}
-	printf("Name: %s\n", names_players->name_players1);
 	if( i >= length_name - 1)
 		while(getchar() != '\n');
 
@@ -150,11 +154,18 @@ void enter_names(name *names_players, score *set_score)
 	for(i = 0; (i < length_name - 1) && k == 0; i++)
 	{
 		names_players->name_players2[i] = getchar();
-		if(names_players->name_players2[i] == '\n')
-			k = 1;
 		names_players->name_players2[i + 1] = '\0';
+		if(names_players->name_players2[i] == '\n')
+		{
+			if(names_players->name_players2[0] != '\n' && names_players->name_players2[0] != '\0')
+			{
+				k = 1;
+				printf("\n");
+			}
+			else
+				i--;
+		}
 	}
-	printf("Name: %s\n", names_players->name_players2);
 	if( i >= length_name - 1)
 		while(getchar() != '\n');
 
