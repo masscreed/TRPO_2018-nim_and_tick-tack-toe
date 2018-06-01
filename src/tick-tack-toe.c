@@ -3,7 +3,6 @@
 #include <conio.h>
 #include "tick-tack-toe.h"
 
-
 int status_game = 0;
 int end_game = 1;
 char space = ' ';
@@ -204,21 +203,152 @@ int check_correct_data(char* a, char ch[][const_length])
 	return 0;
  }
  
- void safe_score(name *names_players, score *score)
+void copy_struct_to_string(char buff1[], char buff2[], name  *names_players)
 {
-	FILE *safe_score;
-	if( (safe_score = fopen("score_tick.txt", "wt")) != NULL)
+	int i, j = 0, k = 0;
+	for(i =0; i < length_name - 1; i++ )
 	{
-		if(score->win_players1 != 0 || score->loss_players1 != 0)
+		if(names_players->name_players1[i] != '\0' && k == 0)
 		{
-			fprintf(safe_score, "%d %d %s", score->win_players1, score->loss_players1, names_players->name_players1);
+		buff1[i] = names_players->name_players1[i];
+		buff1[i + 1] = '\0';
 		}
-		
-		if(score->win_players2 != 0 || score->loss_players2 != 0)
+		else
+			k = 1;
+		if(names_players->name_players2[i] != '\0' && j == 0)
 		{
-			fprintf(safe_score, "%d %d %s", score->win_players2, score->loss_players2, names_players->name_players2);
+		buff2[i] = names_players->name_players2[i];
+		buff2[i + 1] = '\0';
+		}
+		else
+			j = 1;
+	}
+}
+
+void copy_string(char buff1[], char buff2[])
+{
+	int i;
+	for(i =0; (i < length_name - 1) && buff2[i] != '\0'; i++ )
+	{
+		buff1[i] = buff2[i];
+		buff1[i + 1] = '\0';
+	}
+}
+
+ 
+int equal_string(char buff1[], char buff2[])
+{
+	int i, k = 0;
+	for(i =0; ( i < length_name - 1) && k == 0 && (buff1[i] != '\0' && buff2[i]!= '\0'); i++ )
+	{
+		if( !(buff1[i] == buff2[i]) && k == 0)
+			return 0;
+	}
+	return 1;
+}
+
+int count_string_tick()
+{
+	FILE *read_score;
+	char name[length_name];
+	int win, loss, i = 0;
+	if( (read_score = fopen("score_tick.txt", "rt")) != NULL)
+	{
+		while(!feof(read_score))
+		{
+			fscanf(read_score, "%s%d%d", name, &win, &loss);
+			i++;
+		}
+		fclose(read_score);
+	}
+	return i - 1;
+}
+ 
+ void safe_score(name *names_players, score *score)
+ {
+	char buff[max_safe_score][length_name];
+	int win[max_safe_score], loss[max_safe_score], i, t, find_players[] = { 0, 0};
+	char buff1[length_name], buff2[length_name];
+	FILE *safe_score;
+	t = count_string_tick();
+	i = 0;
+	if( (safe_score = fopen("score_tick.txt", "rt")) != NULL)
+	{
+		while(!feof(safe_score) && t > i)
+		{
+			fscanf(safe_score, "%s%d%d", buff[i], &win[i], &loss[i]);
+			i++;
 		}
 		fclose(safe_score);
+	}
+	copy_struct_to_string(buff1, buff2, names_players);
+	i = t;
+	for(t = 0; t < i; t++)
+	{
+		if(equal_string(buff[t], buff1) == 1)
+		{
+			win[t] += score->win_players1;
+			loss[t] += score->loss_players1;
+			find_players[0]++;
+		}
+		if(equal_string(buff[t], buff2) == 1)
+		{
+			win[t] += score->win_players2;
+			loss[t] += score->loss_players2;
+			find_players[1]++;
+		}
+	}
+	
+	if( find_players[0] == 0)
+	{
+		copy_string( buff[i], buff1);
+		win[i] = score->win_players1;
+		loss[i] = score->loss_players1;
+		i++;
+	}
+	
+	if( find_players[1] == 0)
+	{
+		copy_string( buff[i], buff2);
+		win[i] = score->win_players2;
+		loss[i] = score->loss_players2;
+		i++;
+	}
+	sort_top(buff, win, loss, i);
+	if( (safe_score = fopen("score_tick.txt", "wt")) != NULL)
+	{
+		for(t = 0; t < i; t++ )
+		{
+			fprintf(safe_score, "%s %d %d\n", buff[t], win[t], loss[t]);	
+		}
+		fclose(safe_score);
+	}
+	
+ }
+ 
+void sort_top(char buff[][length_name], int win[], int loss[], int count_name)
+{
+	char buff_copy[length_name];
+	int win_copy, loss_copy;
+	int i, j, max;
+	for(i = 0; i < count_name; i++)
+	{
+		for(j = i; j < count_name; j++)
+		{
+			max = win[i];
+			if( max < win[j])
+			{
+				copy_string( buff_copy, buff[i]);
+				copy_string( buff[i], buff[j]);
+				copy_string( buff[j], buff_copy);
+				win_copy = win[i];
+				win[i] = win[j];
+				win[j] = win_copy;
+				loss_copy = loss[i];
+				loss[i] = loss[j];
+				loss[j] = loss_copy;
+			}
+		}
 	}
 }
  

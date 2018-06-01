@@ -63,16 +63,16 @@ void print_top_tick()
 	{
 		while(!feof(read_score))
 		{
-			fscanf(read_score, "%d%d%s", &win, &loss, name);
+			fscanf(read_score, "%s%d%d", name, &win, &loss);
 			i++;
 		}
 		fclose(read_score);
 	}
 	if( (read_score = fopen("score_tick.txt", "rt")) != NULL)
 	{
-		while(!feof(read_score) && i-1>0)
+		while(!feof(read_score) && i - 1 > 0)
 		{
-			fscanf(read_score, "%d%d%s", &win, &loss, name);
+			fscanf(read_score, "%s%d%d", name, &win, &loss);
 			printf("%s win:%d loss:%d\n", name, win, loss);
 			i--;
 		}
