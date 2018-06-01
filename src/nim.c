@@ -1,4 +1,10 @@
-#include<stdio.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <ctype.h>
+#include <string.h>
+#include <conio.h>
+#include "nim.h"
+#include "tick-tack-toe.h"
 
 void mass_input(int mass[3]) { //считывает количество спичек в каждой кучке
 	char str[256];
@@ -119,7 +125,7 @@ int* heap_change(int* mass, int i, int num) { //подсчет кучки пос
 	return mass[i];
 }
 
-void mechanics_of_the_game (int mass[3]) { //механика игры
+int mechanics_of_the_game (int mass[3]) { //механика игры
 	int num, input; //num - количество взятых спичек, input - выбранная кучка
 	int k = 1, f, i; //k - проверка на очередь игрока, f - проверка на правельность введеного значения
 	
@@ -251,17 +257,32 @@ void mechanics_of_the_game (int mass[3]) { //механика игры
 			k--;
 		}
 	}
+	return k;
 }
 
-int main () {
+void start_game_nim() {
+	name *names_players = malloc(sizeof(name));
+	score *set_score = malloc(sizeof(score));
+	enter_names(names_players, set_score);
+	int player_win;
+	
 	int mass[3];
 	
 	mass_input(mass);
 	
 	mass_output(mass);
 	
-	mechanics_of_the_game(mass);
+	player_win = mechanics_of_the_game(mass);
 	
-	printf("\nYOU WIN\n");
-	return 0;
+	if (player_win % 2 == 0) {
+		set_score->win_players1++;
+		set_score->loss_players2++;
+		printf("Name: %s\t", names_players->name_players1);
+		printf("Count win: %d, loss: %d\n\n", set_score->win_players1, set_score->loss_players1);
+	} else {
+		set_score->win_players2++;
+		set_score->loss_players1++;
+		printf("Name: %s\t", names_players->name_players2);
+		printf("Count win: %d, loss: %d\n\n", set_score->win_players2, set_score->loss_players2);
+	}
 }
