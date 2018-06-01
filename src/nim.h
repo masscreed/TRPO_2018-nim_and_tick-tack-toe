@@ -9,5 +9,7 @@ int take_number_matches();
 int* heap_change(int* mass, int i, int num);
 int mechanics_of_the_game (int mass[3]);
 void start_game_nim();
+int end_nim (name *names_players, score *score, int status);
+int end_nim_quit();
 
 #endif
