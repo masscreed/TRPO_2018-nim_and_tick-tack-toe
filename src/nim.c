@@ -125,10 +125,8 @@ int take_number_matches() { //считывает сколько спичек в�
 	return num;
 }
 
-int* heap_change(int* mass, int i, int num) { //подсчет кучки после take_number_matches
+void heap_change(int* mass, int i, int num) { //подсчет кучки после take_number_matches
 	mass[i] = mass[i] - num;
-	
-	return mass[i];
 }
 
 int mechanics_of_the_game (int mass[3]) { //механика игры
@@ -156,7 +154,7 @@ int mechanics_of_the_game (int mass[3]) { //механика игры
 							if (end_check == 0) {
 								if (num <= mass[0]) {
 									i = 0;
-									mass[0] = heap_change(mass, i, num);
+									heap_change(mass, i, num);
 									mass_output(mass);
 									f--;
 								} else {
@@ -174,7 +172,7 @@ int mechanics_of_the_game (int mass[3]) { //механика игры
 							if (end_check == 0) {
 								if (num <= mass[1]) {
 									i = 1;
-									mass[1] = heap_change(mass, i, num);
+									heap_change(mass, i, num);
 									mass_output(mass);
 									f--;
 								} else {
@@ -192,7 +190,7 @@ int mechanics_of_the_game (int mass[3]) { //механика игры
 							if (end_check == 0) {
 								if (num <= mass[2]) {
 									i = 2;
-									mass[2] = heap_change(mass, i, num);
+									heap_change(mass, i, num);
 									mass_output(mass);
 									f--;
 								} else {
@@ -223,7 +221,7 @@ int mechanics_of_the_game (int mass[3]) { //механика игры
 							if (end_check == 0) {
 								if (num <= mass[0]) {
 									i = 0;
-									mass[0] = heap_change(mass, i, num);
+									heap_change(mass, i, num);
 									mass_output(mass);
 									f--;
 								} else {
@@ -241,7 +239,7 @@ int mechanics_of_the_game (int mass[3]) { //механика игры
 							if (end_check == 0) {
 								if (num <= mass[1]) {
 									i = 1;
-									mass[1] = heap_change(mass, i, num);
+									heap_change(mass, i, num);
 									mass_output(mass);
 									f--;
 								} else {
@@ -259,7 +257,7 @@ int mechanics_of_the_game (int mass[3]) { //механика игры
 							if (end_check == 0) {
 								if (num <= mass[2]) {
 									i = 2;
-									mass[2] = heap_change(mass, i, num);
+									heap_change(mass, i, num);
 									mass_output(mass);
 									f--;
 								} else {
@@ -293,9 +291,9 @@ int end_nim(name *names_players, score *score, int status)
 			return 1;
 		} else {
 			printf("\nRestart game\n\n");
-			return 0;
 		}
 	}
+	return 0;
 }
 
 int end_nim_quit()
