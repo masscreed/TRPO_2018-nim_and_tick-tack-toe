@@ -19,6 +19,7 @@ typedef struct{
 #define length_name 16
 #define max_safe_score 512
 
+int mygetch();
 void print_top_tick();
 int count_string_tick();
 void copy_struct_to_string(char buff1[], char buff2[], name  *names_players);
