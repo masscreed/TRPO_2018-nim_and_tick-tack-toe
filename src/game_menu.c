@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <conio.h>
 #include "tick-tack-toe.h"
+#include "nim.h"
+
 
 int main()
 {
@@ -28,6 +30,7 @@ int main()
 		{
 		case 1: {
 			system("clear");
+			start_game_nim();
 			break;
 		};
 		case 2: {
