@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
-#include <conio.h>
 #include "tick-tack-toe.h"
 #include "nim.h"
 
