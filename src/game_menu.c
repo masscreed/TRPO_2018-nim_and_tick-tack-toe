@@ -1,10 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <conio.h>
 #include "tick-tack-toe.h"
 #include "nim.h"
-
-
 int main()
 {
 	system("clear");
@@ -18,11 +15,11 @@ int main()
 		printf("3. Top in game nim\n");
 		printf("4. Top in game tick-tack-toe\n");
 		printf("5. Exit\n");
-		num = getche();
+		num = mygetch();
 		while (!(num >= '1' && num <= '5'))
 		{
 			printf("\nEnter correct data");
-			num = getche();
+			num = mygetch();
 			printf("\n");
 		}
 		printf("\n");
@@ -82,6 +79,23 @@ void print_top_tick()
 		fclose(read_score);
 	}
 	printf("\nPress any key\n");
-	getche();
+	mygetch();
 	printf("\n");
+}
+
+int mygetch()
+{
+	int k=0;
+	char ch;
+	do
+	{
+		ch = getchar();
+		if (ch != '\n')
+		{
+			k = 1;
+		}
+	} while (k == 0);
+	while(getchar() != '\n');
+	
+	return ch;
 }

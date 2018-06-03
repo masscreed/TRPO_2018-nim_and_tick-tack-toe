@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <conio.h>
 #include "tick-tack-toe.h"
 
 int status_game = 0;
@@ -69,16 +68,18 @@ void start_game_tick()
 
 int enter_coordinate(char a[])
 {
-	int i;
-	for(i = 0; i < 3 - 1; i++)
+	int i, k =0;
+	for(i = 0; (i < 3 - 1) && k == 0; i++)
 	{
-		a[i] = getche();
+		a[i] = getchar();
 		if(a[i] == 'q')
 			return -1;
 		a[i + 1] = '\0';
 		if(a[i] == '\n')
-			i++;
+			k = 1;
 	}
+	if( (i >= 2) && k == 0)
+		while(getchar() != '\n');
 	printf("\n");
 	return 0;
 }
@@ -99,7 +100,7 @@ void it_end(name *names_players, score *score, int status)
 	if( status == 0)
 	{
 		char end;
-		end = getche();
+		end = mygetch();
 		if( end == 'n')
 		{
 			system("clear");
@@ -115,7 +116,7 @@ void it_end(name *names_players, score *score, int status)
 		char end;
 		printf("\nAre you sure you want to finish the game?\n");
 		printf("If you sure press y, else press any key\n");
-		end = getche();
+		end = mygetch();
 		if( end == 'y')
 		{
 			system("clear");
