@@ -6,7 +6,7 @@
 #include "nim.h"
 
 int end_check, end_quit;
-
+ 
 void get_string(char str[])
 {
 	int i, k = 0;
@@ -150,12 +150,91 @@ void heap_change(int* mass, int i, int num) { //подсчет кучки пос
 int check_correct_matches(int* mass, int i, int num)
 {
 	if (num <= mass[i]) {
-	heap_change(mass, i, num);
-	mass_output(mass);
-	return 1;
+		heap_change(mass, i, num);
+		mass_output(mass);
+		return 1;
 	} 
 	return 0;
 }
+
+int count_string_nim()
+{
+	FILE *read_score;
+	char name[length_name];
+	int win, loss, i = 0;
+	if( (read_score = fopen("score_nim.txt", "rt")) != NULL)
+	{
+		while(!feof(read_score))
+		{
+			fscanf(read_score, "%s%d%d", name, &win, &loss);
+			i++;
+		}
+		fclose(read_score);
+	}
+	return i - 1;
+}
+
+void safe_score_nim(name *names_players, score *score)
+ {
+	char buff[max_safe_score][length_name];
+	int win[max_safe_score], loss[max_safe_score], i, t, find_players[] = { 0, 0};
+	char buff1[length_name], buff2[length_name];
+	FILE *safe_score;
+	t = count_string_nim();
+	i = 0;
+	if( (safe_score = fopen("score_nim.txt", "rt")) != NULL)
+	{
+		while(!feof(safe_score) && t > i)
+		{
+			fscanf(safe_score, "%s%d%d", buff[i], &win[i], &loss[i]);
+			i++;
+		}
+		fclose(safe_score);
+	}
+	copy_struct_to_string(buff1, buff2, names_players);
+	i = t;
+	for(t = 0; t < i; t++)
+	{
+		if(equal_string(buff[t], buff1) == 1)
+		{
+			win[t] += score->win_players1;
+			loss[t] += score->loss_players1;
+			find_players[0]++;
+		}
+		if(equal_string(buff[t], buff2) == 1)
+		{
+			win[t] += score->win_players2;
+			loss[t] += score->loss_players2;
+			find_players[1]++;
+		}
+	}
+	
+	if( find_players[0] == 0)
+	{
+		copy_string( buff[i], buff1);
+		win[i] = score->win_players1;
+		loss[i] = score->loss_players1;
+		i++;
+	}
+	
+	if( find_players[1] == 0)
+	{
+		copy_string( buff[i], buff2);
+		win[i] = score->win_players2;
+		loss[i] = score->loss_players2;
+		i++;
+	}
+	sort_top(buff, win, loss, i);
+	if( (safe_score = fopen("score_nim.txt", "wt")) != NULL)
+	{
+		for(t = 0; t < i; t++ )
+		{
+			fprintf(safe_score, "%s %d %d\n", buff[t], win[t], loss[t]);	
+		}
+		fclose(safe_score);
+	}
+	
+ }
 
 int mechanics_of_the_game (int mass[3]) { //механика игры
 	int num, input; //num - количество взятых спичек, input - выбранная кучка
@@ -354,4 +433,5 @@ void start_game_nim() {
 			end_check = 1;
 		}
 	} while (end_nim(names_players, set_score, 0) == 0);
+	safe_score_nim(names_players, set_score);
 }
