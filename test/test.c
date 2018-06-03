@@ -47,17 +47,6 @@ CTEST (heap_test_true, heap_check)
 }
 
 
-CTEST (heap_test_true, heap_check)
-{
-    int value[] = { 23, 5, 7};
-	int input = 3;
-    int result = heap_check (input, value);
-
-    const int expected = 0;
-    ASSERT_EQUAL (expected, result);
-}
-
-
 CTEST (tick_test_true, check_correct_data)
 {	
 	char ch[const_height][const_length] = {
