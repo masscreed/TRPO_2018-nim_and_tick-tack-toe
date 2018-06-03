@@ -104,18 +104,20 @@ int heap_selection() { //считывает выбранную кучку
 	return input;
 }
 
-int heap_check(int input, int mass[3], int f) { //проверяет корректно ли введена кучка
+int heap_check(int input, int mass[3]) { //проверяет корректно ли введена кучка
 	if ( input >= 1 && input <= 3 ) {
 		if ( mass[input-1] > 0 ) {
-			f--;
+			return 0;
 		} else {
 			printf("\nERROR\n");
+			return 1;
 		}
 	} else { 
 		printf("\nERROR\n");
+		return 1;
 	}
 	
-	return f;
+	return 0;
 }
 
 int take_number_matches() { //считывает сколько спичек взять из кучки
@@ -145,6 +147,16 @@ void heap_change(int* mass, int i, int num) { //подсчет кучки пос
 	mass[i] = mass[i] - num;
 }
 
+int check_correct_matches(int* mass, int i, int num)
+{
+	if (num <= mass[i]) {
+	heap_change(mass, i, num);
+	mass_output(mass);
+	return 1;
+	} 
+	return 0;
+}
+
 int mechanics_of_the_game (int mass[3]) { //механика игры
 	int num, input; //num - количество взятых спичек, input - выбранная кучка
 	int k = 1, f, i; //k - проверка на очередь игрока, f - проверка на правельность введеного значения
@@ -157,7 +169,7 @@ int mechanics_of_the_game (int mass[3]) { //механика игры
 			while ( f == 1 && end_check == 0) {
 				input = heap_selection();
 				if (end_check == 0)
-					f = heap_check(input, mass, f);
+					f = heap_check(input, mass);
 			}
 			
 			if (end_check == 0) {
@@ -168,14 +180,11 @@ int mechanics_of_the_game (int mass[3]) { //механика игры
 							
 							num = take_number_matches();
 							if (end_check == 0) {
-								if (num <= mass[0]) {
-									i = 0;
-									heap_change(mass, i, num);
-									mass_output(mass);
+								i = 0;
+								if (check_correct_matches(mass, i, num))
 									f--;
-								} else {
+								else 
 									printf("\nERROR\n");
-								}
 							}
 						}
 						break;
@@ -186,14 +195,11 @@ int mechanics_of_the_game (int mass[3]) { //механика игры
 							
 							num = take_number_matches();
 							if (end_check == 0) {
-								if (num <= mass[1]) {
-									i = 1;
-									heap_change(mass, i, num);
-									mass_output(mass);
+								i = 1;
+								if (check_correct_matches(mass, i, num))
 									f--;
-								} else {
+								else 
 									printf("\nERROR\n");
-								}
 							}
 						}
 						break;
@@ -204,14 +210,11 @@ int mechanics_of_the_game (int mass[3]) { //механика игры
 							
 							num = take_number_matches();
 							if (end_check == 0) {
-								if (num <= mass[2]) {
-									i = 2;
-									heap_change(mass, i, num);
-									mass_output(mass);
+								i = 2;
+								if (check_correct_matches(mass, i, num))
 									f--;
-								} else {
+								else 
 									printf("\nERROR\n");
-								}
 							}
 						}
 						break;
@@ -225,7 +228,7 @@ int mechanics_of_the_game (int mass[3]) { //механика игры
 			while ( f == 1 && end_check == 0) {
 				input = heap_selection();
 				if (end_check == 0)
-					f = heap_check(input, mass, f);
+					f = heap_check(input, mass);
 			}
 			if (end_check == 0) { 
 				switch ( input ) {
@@ -235,14 +238,11 @@ int mechanics_of_the_game (int mass[3]) { //механика игры
 							
 							num = take_number_matches();
 							if (end_check == 0) {
-								if (num <= mass[0]) {
-									i = 0;
-									heap_change(mass, i, num);
-									mass_output(mass);
+								i = 0;
+								if (check_correct_matches(mass, i, num))
 									f--;
-								} else {
+								else 
 									printf("\nERROR\n");
-								}
 							}
 						}
 						break;
@@ -253,14 +253,11 @@ int mechanics_of_the_game (int mass[3]) { //механика игры
 							
 							num = take_number_matches();
 							if (end_check == 0) {
-								if (num <= mass[1]) {
-									i = 1;
-									heap_change(mass, i, num);
-									mass_output(mass);
+								i = 1;
+								if (check_correct_matches(mass, i, num))
 									f--;
-								} else {
+								else 
 									printf("\nERROR\n");
-								}
 							}
 						}
 						break;
@@ -271,14 +268,11 @@ int mechanics_of_the_game (int mass[3]) { //механика игры
 							
 							num = take_number_matches();
 							if (end_check == 0) {
-								if (num <= mass[2]) {
-									i = 2;
-									heap_change(mass, i, num);
-									mass_output(mass);
+								i = 2;
+								if (check_correct_matches(mass, i, num))
 									f--;
-								} else {
+								else 
 									printf("\nERROR\n");
-								}
 							}
 						}
 						break;
