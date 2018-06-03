@@ -68,16 +68,18 @@ void start_game_tick()
 
 int enter_coordinate(char a[])
 {
-	int i;
-	for(i = 0; i < 3 - 1; i++)
+	int i, k =0;
+	for(i = 0; (i < 3 - 1) && k == 0; i++)
 	{
-		a[i] = mygetch();
+		a[i] = getchar();
 		if(a[i] == 'q')
 			return -1;
 		a[i + 1] = '\0';
 		if(a[i] == '\n')
-			i++;
+			k = 1;
 	}
+	if( (i >= 2) && k == 0)
+		while(getchar() != '\n');
 	printf("\n");
 	return 0;
 }

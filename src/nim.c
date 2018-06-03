@@ -7,13 +7,27 @@
 
 int end_check, end_quit;
 
+void get_string(char str[])
+{
+	int i, k = 0;
+	for(i = 0; (i < 256 - 1) && k == 0; i++)
+	{
+		str[i] = getchar();
+		str[i + 1] = '\0';
+		if(str[i] == '\n')
+			k = 1;
+	}
+	if( i >= 256 - 1)
+		while(getchar() != '\n');
+}
+
 void mass_input(int mass[3]) { //считывает количество спичек в каждой кучке
 	char str[256];
 	int n = 0;
 	
 	while (n == 0) {
 		printf("\nEnter the number of matches in the first pile\n");
-		gets(str);
+		get_string(str);
 		if ( isdigit(str[0]) ) {
 			mass[0] = atoi (str);
 			n++;
@@ -27,7 +41,7 @@ void mass_input(int mass[3]) { //считывает количество спи�
 	n--;
 	while (n == 0) {
 		printf("\nEnter the number of matches in the second pile\n");
-		gets(str);
+		get_string(str);
 		if ( isdigit(str[0]) ) {
 			mass[1] = atoi (str);
 			n++;
@@ -38,7 +52,7 @@ void mass_input(int mass[3]) { //считывает количество спи�
 	n--;
 	while (n == 0) {
 		printf("\nEnter the number of matches in the third pile\n");
-		gets(str);
+		get_string(str);
 		if ( isdigit(str[0]) ) {
 			mass[2] = atoi (str);
 			n++;
@@ -76,7 +90,7 @@ int heap_selection() { //считывает выбранную кучку
 	
 	while (n == 0 && end_check == 0) {
 		printf("\nSelect a pile\n");
-		gets(str);
+		get_string(str);
 		if (!(str[0] == 'q' && end_nim_quit() == 1)) {
 			if ( isdigit(str[0]) ) {
 				input = atoi (str);
@@ -110,11 +124,14 @@ int take_number_matches() { //считывает сколько спичек в�
 	
 	while (k == 0 && end_check == 0) {
 		printf("\nHow many matches to take?\n");
-		gets(str);
+		get_string(str);
 		if (!(str[0] == 'q' && end_nim_quit() == 1)) {
 			if ( isdigit(str[0]) ) {
 				num = atoi (str);
-				k++;
+				if( num != 0)
+					k++;
+				else
+					printf("ERROR");
 			} else {
 				printf("ERROR");
 			}
@@ -284,7 +301,7 @@ int end_nim(name *names_players, score *score, int status)
 	{
 		printf("Enter n if you do not want to continue playing, else press any key\n");
 		char end;
-		end = getche();
+		end = mygetch();
 		if( end == 'n') {
 			system("clear");
 			return 1;
@@ -300,7 +317,7 @@ int end_nim_quit()
 	char end;
 	printf("\nAre you sure you want to finish the game?\n");
 	printf("If you sure press y, else press any key\n");
-	end = getche();
+	end = mygetch();
 	if( end == 'y')
 	{
 		system("clear");

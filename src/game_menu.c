@@ -2,8 +2,6 @@
 #include <stdlib.h>
 #include "tick-tack-toe.h"
 #include "nim.h"
-
-
 int main()
 {
 	system("clear");
@@ -83,4 +81,21 @@ void print_top_tick()
 	printf("\nPress any key\n");
 	mygetch();
 	printf("\n");
+}
+
+int mygetch()
+{
+	int k=0;
+	char ch;
+	do
+	{
+		ch = getchar();
+		if (ch != '\n')
+		{
+			k = 1;
+		}
+	} while (k == 0);
+	while(getchar() != '\n');
+	
+	return ch;
 }
