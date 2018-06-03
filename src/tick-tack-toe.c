@@ -6,6 +6,23 @@ int status_game = 0;
 int end_game = 1;
 char space = ' ';
 
+int mygetch()
+{
+	int k=0;
+	char ch;
+	do
+	{
+		ch = getchar();
+		if (ch != '\n')
+		{
+			k = 1;
+		}
+	} while (k == 0);
+	while(getchar() != '\n');
+	
+	return ch;
+}
+
 void start_game_tick()
 {
 	name *names_players = malloc(sizeof(name));

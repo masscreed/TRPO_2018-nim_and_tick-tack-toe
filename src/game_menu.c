@@ -83,23 +83,6 @@ void print_top_tick()
 	printf("\n");
 }
 
-int mygetch()
-{
-	int k=0;
-	char ch;
-	do
-	{
-		ch = getchar();
-		if (ch != '\n')
-		{
-			k = 1;
-		}
-	} while (k == 0);
-	while(getchar() != '\n');
-	
-	return ch;
-}
-
 void print_top_nim()
 {
 	system("clear");
