@@ -9,13 +9,28 @@ int end_check, end_quit;
  
 void get_string(char str[])
 {
+	char c;
 	int i, k = 0;
 	for(i = 0; (i < 256 - 1) && k == 0; i++)
 	{
-		str[i] = getchar();
-		str[i + 1] = '\0';
-		if(str[i] == '\n')
-			k = 1;
+		c = getchar();
+		if (c != '-') {
+			if (i == 0 && c != '0') {
+				str[i] = c;
+				str[i + 1] = '\0';
+				if(str[i] == '\n')
+					k = 1;
+			} else if (i > 0) {
+				str[i] = c;
+				str[i + 1] = '\0';
+				if(str[i] == '\n')
+					k = 1;
+			} else {
+				i--;
+			}
+		} else {
+			i--;
+		}
 	}
 	if( i >= 256 - 1)
 		while(getchar() != '\n');
@@ -28,14 +43,11 @@ void mass_input(int mass[3]) { //считывает количество спи�
 	while (n == 0) {
 		printf("\nEnter the number of matches in the first pile\n");
 		get_string(str);
-		if ( isdigit(str[0]) ) {
+		if ( isdigit(str[0])) {
 			mass[0] = atoi (str);
 			n++;
 		} else {
 			printf("ERROR");
-		}
-		if (mass[0] <= 0) {
-			n--;
 		}
 	}
 	n--;
@@ -149,11 +161,14 @@ void heap_change(int* mass, int i, int num) { //подсчет кучки пос
 
 int check_correct_matches(int* mass, int i, int num)
 {
-	if (num <= mass[i]) {
-		heap_change(mass, i, num);
-		mass_output(mass);
-		return 1;
-	} 
+	if (num > 0) {
+		if (num <= mass[i]) {
+			heap_change(mass, i, num);
+			mass_output(mass);
+			return 1;
+		}
+	}
+	
 	return 0;
 }
 
