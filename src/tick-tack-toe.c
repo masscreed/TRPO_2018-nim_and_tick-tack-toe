@@ -285,9 +285,10 @@ int count_string_tick()
 		}
 		
 		fclose(read_score);
+		return i - 1;
 	}
 	
-	return i - 1;
+	return i;
 }
 
 void safe_score(name *names_players, score *score)

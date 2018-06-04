@@ -198,10 +198,11 @@ int count_string_nim()
 			i++;
 		}
 	
-	fclose(read_score);
+		fclose(read_score);
+		return i - 1;
 	}
 	
-	return i - 1;
+	return i;
 }
 
 void safe_score_nim(name *names_players, score *score)
