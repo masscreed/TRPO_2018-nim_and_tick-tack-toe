@@ -1,7 +1,6 @@
 #ifndef TICK_H
 #define TICK_H
 typedef struct{
-
 	char name_players1[16];
 	char name_players2[16];
 } name;
